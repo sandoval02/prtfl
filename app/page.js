@@ -74,7 +74,7 @@ export default async function Home() {
         </h1>
         <Scene />
         <div className="hero-me">
-          <img src="/me.webp" alt={`Portrait of ${site.name}`} width="873" height="864" fetchPriority="high" />
+          <img src="/me.webp" alt={`Portrait of ${site.name}`} width="756" height="1356" fetchPriority="high" />
         </div>
         <div className="hero-meta">
           <p className="mono">{site.role}</p>

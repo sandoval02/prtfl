@@ -72,7 +72,7 @@ h1, h2, h3, .logo, .wordmark, .stats strong { font-family: var(--font-display), 
 .scene { position: absolute; inset: 0; z-index: 2; }
 .hero-me { position: absolute; z-index: 3; inset: auto 0 0 0; width: fit-content; margin-inline: auto; height: min(80svh, 820px); pointer-events: none; }
 /* oval fade hides the photo's cropped shoulders */
-.hero-me { --fade: radial-gradient(ellipse 50% 72% at 50% 36%, #000 62%, transparent 100%); }
+.hero-me { --fade: radial-gradient(ellipse 58% 66% at 50% 40%, #000 66%, transparent 100%); }
 .hero-me img {
   height: 100%; width: auto; max-width: none;
   -webkit-mask-image: var(--fade); mask-image: var(--fade);
