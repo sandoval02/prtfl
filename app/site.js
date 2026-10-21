@@ -95,7 +95,7 @@ export const site = {
       bar: 'applischo / evaluation',
       kind: 'Web App · Scholarship management',
       year: '2026',
-      role: 'Full-stack developer · solo build',
+      role: 'Full-stack developer · solo project',
       summary:
         'Scholarship management system for a municipal program, from application and exam to evaluation, approval and payout. A rule-based scorer recommends; staff decide.',
       image: '',
