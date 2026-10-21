@@ -5,11 +5,17 @@ import { site } from './site';
 const score = (r) => r.stargazers_count * 3 + r.forks_count + (r.description ? 2 : 0) + (r.homepage ? 2 : 0);
 
 // Runs once at build time (static export), so repos refresh on every deploy.
+// GH_PORTFOLIO_TOKEN (your read-only PAT, CI secret) → public + private repos you own.
+// Without it → public repos only. The token never reaches the browser; only repo names/descriptions do.
 async function getRepos() {
   try {
-    // Token (set in CI) only raises the rate limit; this endpoint returns public repos only.
-    const headers = process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {};
-    const res = await fetch(`https://api.github.com/users/${site.github}/repos?sort=updated&per_page=100`, { headers });
+    const pat = process.env.GH_PORTFOLIO_TOKEN;
+    const token = pat || process.env.GITHUB_TOKEN;
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    const url = pat
+      ? 'https://api.github.com/user/repos?affiliation=owner&sort=updated&per_page=100'
+      : `https://api.github.com/users/${site.github}/repos?sort=updated&per_page=100`;
+    const res = await fetch(url, { headers });
     if (!res.ok) throw new Error(res.status);
     return (await res.json())
       .filter((r) => !r.fork && !r.archived && r.name.toLowerCase() !== site.github.toLowerCase())
@@ -19,8 +25,9 @@ async function getRepos() {
       .map((r) => ({
         title: r.name.replace(/[-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2'),
         desc: r.description || 'No description yet.',
-        tags: [r.language, ...r.topics].filter(Boolean).slice(0, 4),
-        link: r.homepage || r.html_url,
+        tags: [r.private && 'Private', r.language, ...r.topics].filter(Boolean).slice(0, 4),
+        // private repo pages 404 for visitors, so only link a live demo if there is one
+        link: r.homepage || (r.private ? null : r.html_url),
       }));
   } catch {
     return [];
@@ -161,14 +168,17 @@ export default async function Home() {
             <p className="mono eyebrow">(05) Featured work</p>
             <h2 className="kinetic">Welcome to the lab.</h2>
             <div className="grid" data-reveal>
-              {projects.map((p) => (
-                <a key={p.title} href={p.link} className="card">
-                  <h3>{p.title}</h3>
-                  <p>{p.desc}</p>
-                  <ul className="chips small">{p.tags.map((t) => <li key={t}>{t}</li>)}</ul>
-                  <span className="mono">View project ↗</span>
-                </a>
-              ))}
+              {projects.map((p) => {
+                const Card = p.link ? 'a' : 'article';
+                return (
+                  <Card key={p.title} href={p.link || undefined} className="card">
+                    <h3>{p.title}</h3>
+                    <p>{p.desc}</p>
+                    <ul className="chips small">{p.tags.map((t) => <li key={t}>{t}</li>)}</ul>
+                    <span className="mono">{p.link ? 'View project ↗' : 'Private repository'}</span>
+                  </Card>
+                );
+              })}
               <a href={site.socials.GitHub} className="card more">
                 <h3>More on GitHub</h3>
                 <span className="mono">github.com/{site.github} ↗</span>

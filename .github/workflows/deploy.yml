@@ -32,6 +32,7 @@ jobs:
       - run: npm run build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PORTFOLIO_TOKEN: ${{ secrets.GH_PORTFOLIO_TOKEN }} # optional: include private repos
       - uses: actions/upload-pages-artifact@v4
         with:
           path: out
