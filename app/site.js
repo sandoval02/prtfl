@@ -13,6 +13,22 @@ export const site = {
     GitHub: `https://github.com/${github}`,
   },
 
+  // Hero recruiter card. availability: '' hides the badge. resume: e.g. '/resume.pdf' (put the file in public/).
+  availability: 'Open to internships & junior roles',
+  resume: '',
+  highlights: [
+    { k: 'Shipped', v: 'Tugon — live emergency-response app', href: 'https://www.tugon.live' },
+    { k: 'Built', v: 'Web, mobile & APIs: Next.js · Flutter · FastAPI' },
+    { k: 'Secures', v: 'bcrypt · JWT · RBAC · rate limits · OWASP' },
+  ],
+  // Hero terminal (typed out on load).
+  terminal: [
+    { cmd: 'whoami', out: ['geoff — software developer // aspiring pentester'] },
+    { cmd: 'cat stack.txt', out: ['flutter  next.js  fastapi  flask  postgresql'] },
+    { cmd: 'nmap -sV --top-ports 2 gpscrypt.me', out: ['80/tcp   open  http    → 301 https', '443/tcp  open  https   TLS ✓'] },
+    { cmd: './ship --prod tugon.live', out: ['✓ deployed · 216 endpoints · 186 tests passing'] },
+  ],
+
   // Drop Seedance clips into public/ and set them here (e.g. '/hero.mp4'); empty = still image.
   videos: { hero: '', builder: '', lab: '' },
 

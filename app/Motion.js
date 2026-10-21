@@ -74,11 +74,63 @@ function init() {
     .from('.hero-meta > *, .nav > *', { opacity: 0, y: 24, stagger: 0.08 }, 1.1);
   ready();
 
-  // Hero exit: name splits apart, portrait recedes
+  // Terminal types itself out, then loops
+  const typed = gsap.utils.toArray('.term [data-type]');
+  if (typed.length) {
+    const full = typed.map((el) => el.textContent);
+    const rows = typed.map((el) => el.closest('p'));
+    // Lines stay hidden until the "typing" reaches them; the final prompt shows at the end.
+    const clear = () => {
+      typed.forEach((el) => (el.textContent = ''));
+      gsap.set([...rows, '.term-body > .t-cmd'], { autoAlpha: 0 });
+    };
+    clear();
+    const term = gsap.timeline({ delay: 2.4, repeat: -1, repeatDelay: 6 }).call(clear);
+    typed.forEach((el, i) => {
+      const isCmd = !!el.closest('.t-cmd');
+      const o = { n: 0 };
+      term.set(rows[i], { autoAlpha: 1 }, isCmd ? '+=0.45' : '+=0.08').to(o, {
+        n: full[i].length, ease: 'none', duration: isCmd ? full[i].length * 0.045 : 0.2,
+        onUpdate: () => (el.textContent = full[i].slice(0, Math.round(o.n))),
+      });
+    });
+    term.set('.term-body > .t-cmd', { autoAlpha: 1 });
+  }
+
+  const heroMM = gsap.matchMedia();
+  heroMM.add('(min-width: 901px)', () => {
+    // Cards sit tilted in 3D and fly in from depth
+    gsap.set('.term', { rotationY: 16, rotationX: 5, transformPerspective: 900 });
+    gsap.set('.hire', { rotationY: -16, rotationX: 5, transformPerspective: 900 });
+    gsap.from('.term, .hire', {
+      z: -420, rotationY: (i) => (i ? -70 : 70), opacity: 0, duration: 2.2, ease: 'expo.out', delay: 1.7, stagger: 0.15,
+    });
+    if (!matchMedia('(pointer: fine)').matches) return;
+    // Depth parallax: name, portrait and cards react to the pointer at different strengths
+    const q = (sel, prop) => gsap.quickTo(sel, prop, { duration: 0.9, ease: 'power3' });
+    // (portrait only translates: a 3D tilt would re-rasterise it and soften the image)
+    const [nameX, nameY, meX, termY, termX, hireY, hireX] = [
+      ['.hero-name', 'x'], ['.hero-name', 'y'], ['.hero-me', 'x'],
+      ['.term', 'rotationY'], ['.term', 'rotationX'], ['.hire', 'rotationY'], ['.hire', 'rotationX'],
+    ].map(([s, p]) => q(s, p));
+    const onMove = (e) => {
+      const x = e.clientX / innerWidth - 0.5, y = e.clientY / innerHeight - 0.5;
+      nameX(x * -40); nameY(y * -20); meX(x * 26);
+      termY(16 + x * 12); termX(5 - y * 10); hireY(-16 + x * 12); hireX(5 - y * 10);
+    };
+    addEventListener('pointermove', onMove);
+    return () => removeEventListener('pointermove', onMove);
+  });
+  heroMM.add('(max-width: 900px)', () => {
+    gsap.from('.hire', { opacity: 0, y: 30, duration: 1.4, ease: 'expo.out', delay: 1.8 });
+  });
+
+  // Hero exit: name splits apart, portrait recedes, cards drop away
   gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } })
     .to('.hero-name .line:first-child', { xPercent: -25 }, 0)
     .to('.hero-name .line:last-child', { xPercent: 25 }, 0)
     .to('.hero-me', { yPercent: 18, scale: 0.86, filter: 'blur(8px)', opacity: 0.3 }, 0)
+    .to('.hero-cards', { y: 140, opacity: 0 }, 0)
     .to('.hero-bg', { scale: 1.15, opacity: 0.4 }, 0);
 
   // Big headings: chars flip up in 3D out of their word masks

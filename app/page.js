@@ -91,6 +91,7 @@ export default function Home() {
           <a href="#mission">Mission</a>
           <a href="#work">Work</a>
           <a href="#contact">Contact</a>
+          <a href="#contact" className="nav-hire">Hire me</a>
         </div>
       </nav>
 
@@ -104,6 +105,36 @@ export default function Home() {
         <Scene />
         <div className="hero-me">
           <img src="/me.webp" alt={`Portrait of ${site.name}`} width="756" height="1356" fetchPriority="high" />
+        </div>
+        <div className="hero-cards">
+          <div className="term" aria-hidden="true">
+            <div className="case-bar"><i /><i /><i /><span className="mono">geoff@gpscrypt:~</span></div>
+            <div className="term-body">
+              {site.terminal.map((l) => (
+                <div key={l.cmd}>
+                  <p className="t-cmd"><b>$</b> <span data-type>{l.cmd}</span></p>
+                  {l.out.map((o) => <p key={o} className="t-out" data-type>{o}</p>)}
+                </div>
+              ))}
+              <p className="t-cmd"><b>$</b> <i className="caret" /></p>
+            </div>
+          </div>
+          <aside className="hire" aria-label="For recruiters">
+            {site.availability && <p className="avail mono"><i />{site.availability}</p>}
+            <ul>
+              {site.highlights.map((h) => (
+                <li key={h.k}>
+                  <span className="mono">{h.k}</span>
+                  {h.href ? <a href={h.href}>{h.v} ↗</a> : <span>{h.v}</span>}
+                </li>
+              ))}
+            </ul>
+            <p className="hire-cta">
+              <a href="#work" className="btn magnetic">View projects</a>
+              <a href="#contact" className="btn-ghost">Get in touch</a>
+              {site.resume && <a href={site.resume} className="btn-ghost" download>Résumé ↓</a>}
+            </p>
+          </aside>
         </div>
         <div className="hero-meta">
           <p className="mono">{site.role}</p>

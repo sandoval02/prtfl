@@ -58,6 +58,15 @@ export default function Scene() {
     core.add(shell, inner, halo);
     world.add(rings, core);
 
+    // Hero floor: a glowing grid that scrolls toward the camera and fades into fog
+    const CELL = 1;
+    const grid = new THREE.GridHelper(60, 60, 0x3dffb0, 0x3dffb0);
+    grid.material.transparent = true;
+    grid.material.blending = THREE.AdditiveBlending;
+    grid.position.y = -2.4;
+    scene.add(grid);
+    scene.fog = new THREE.Fog(0x050806, 7, 26);
+
     const N = 900;
     const pos = new Float32Array(N * 3);
     for (let i = 0; i < N; i++) pos.set([(Math.random() - 0.5) * 14, (Math.random() - 0.5) * 9, (Math.random() - 0.5) * 6], i * 3);
@@ -102,6 +111,9 @@ export default function Scene() {
       rings.position.set(cx * (1 - rv), cy * (1 - rv), 0); // rings shrink into the core as the hero leaves
       rings.scale.setScalar(lerp(0.25, 1, rv));
       ringMeshes.forEach((m, k) => (m.material.opacity = RING_OPACITY[k] * rv));
+      grid.material.opacity = 0.35 * rv;
+      grid.visible = rv > 0.01;
+      if (!still) grid.position.z = ((t * 0.0006) % CELL);
       shell.material.opacity = 0.26 * dim; // low enough that text over it stays readable
       inner.material.opacity = 0.5 * dim;
       halo.material.opacity = 0.6 * dim;
