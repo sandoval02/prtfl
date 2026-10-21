@@ -26,7 +26,7 @@ function Case({ p, i, total }) {
         <div className="case-bar" aria-hidden="true"><i /><i /><i /><span className="mono">{p.bar}</span></div>
         <div className="case-shot">
           {p.image ? (
-            <img src={p.image} alt={`${p.title} preview`} loading="lazy" data-parallax />
+            <img src={p.image} alt={`${p.title} preview`} loading="lazy" data-parallax="4" />
           ) : (
             <div className="case-placeholder" aria-hidden="true">
               <span className="ph-ring" />
@@ -43,6 +43,7 @@ function Case({ p, i, total }) {
           <span>{p.kind} · {p.year}</span>
         </p>
         <h3>{p.title}</h3>
+        <p className="mono case-role">{p.role}</p>
         <p className="case-summary">{p.summary}</p>
         {p.metrics.length > 0 && (
           <dl className="case-metrics">

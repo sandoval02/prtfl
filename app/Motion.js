@@ -116,10 +116,11 @@ function init() {
     })
   );
 
-  // Parallax plates
-  gsap.utils.toArray('[data-parallax]').forEach((el) =>
-    gsap.fromTo(el, { yPercent: -12 }, { yPercent: 12, ease: 'none', scrollTrigger: { trigger: el.parentElement, scrub: true } })
-  );
+  // Parallax plates (data-parallax="n" sets the travel in %, default 12)
+  gsap.utils.toArray('[data-parallax]').forEach((el) => {
+    const a = +el.dataset.parallax || 12;
+    gsap.fromTo(el, { yPercent: -a }, { yPercent: a, ease: 'none', scrollTrigger: { trigger: el.parentElement, scrub: true } });
+  });
 
   // Project frames open like a shutter as they scroll in
   gsap.utils.toArray('.case-media').forEach((m) =>
