@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { currentPalette, LOW_POWER, renderOptions, pixelRatio } from './palette3d';
 
 // Story background: a corridor of floating holographic screens. Scrolling through the
 // (pinned) story section flies the camera forward to the builder photo at the far end.
@@ -63,11 +64,11 @@ export default function StoryScene({ fallback }) {
     const section = el.closest('section');
     let renderer;
     try {
-      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer = new THREE.WebGLRenderer(renderOptions());
     } catch {
       return; // no WebGL: the builder photo (CSS background) stays as the story backdrop
     }
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setPixelRatio(pixelRatio());
     el.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
@@ -102,12 +103,24 @@ export default function StoryScene({ fallback }) {
       scene.add(plane);
     });
 
-    const P = 700, pos = new Float32Array(P * 3);
+    const P = LOW_POWER ? 250 : 700, pos = new Float32Array(P * 3);
     for (let i = 0; i < P; i++) pos.set([(r() - 0.5) * 12, (r() - 0.5) * 7, 4 - r() * (N * GAP + 6)], i * 3);
-    scene.add(new THREE.Points(
+    const dust = new THREE.Points(
       new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(pos, 3)),
-      new THREE.PointsMaterial({ color: 0x9dffd8, size: 0.03, transparent: true, opacity: 0.7 })
-    ));
+      new THREE.PointsMaterial({ size: 0.03, transparent: true, opacity: 0.7 })
+    );
+    scene.add(dust);
+
+    // Screens stay dark monitors in both themes; the room, fog, frames and dust follow the theme.
+    const recolor = () => {
+      const p = currentPalette();
+      scene.background.setHex(p.bg);
+      scene.fog.color.setHex(p.bg);
+      dust.material.color.setHex(p.dust);
+      screens.forEach((s, i) => s.children[0].material.color.setHex(i % 3 ? p.em : p.or));
+    };
+    recolor();
+    addEventListener('themechange', recolor);
 
     const resize = () => {
       const { clientWidth: w, clientHeight: h } = el;
@@ -145,6 +158,7 @@ export default function StoryScene({ fallback }) {
 
     return () => {
       cancelAnimationFrame(id);
+      removeEventListener('themechange', recolor);
       io.disconnect();
       removeEventListener('resize', resize);
       removeEventListener('pointermove', move);

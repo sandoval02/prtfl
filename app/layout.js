@@ -20,7 +20,10 @@ export const metadata = {
 export const viewport = { themeColor: '#050806' };
 
 // Hides intro elements until GSAP has set their start state; 4s failsafe if the CDN is down.
-const boot = "document.documentElement.classList.add('js');setTimeout(function(){document.documentElement.classList.add('ready')},4000)";
+// Theme: dark by default, a saved choice wins. Set before first paint so there's no flash.
+const boot =
+  "var d=document.documentElement;d.classList.add('js');setTimeout(function(){d.classList.add('ready')},4000);" +
+  "var t='dark';try{t=localStorage.getItem('theme')||t}catch(e){}d.dataset.theme=t;";
 
 export default function RootLayout({ children }) {
   return (

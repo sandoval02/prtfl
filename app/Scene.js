@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { bindTheme, LOW_POWER, renderOptions, pixelRatio } from './palette3d';
 
 // Fixed WebGL layer behind the page. In the hero: orbit rings around the portrait.
 // On scroll the rings collapse into a wireframe core that travels between sections.
@@ -23,11 +24,11 @@ export default function Scene() {
     const el = ref.current;
     let renderer;
     try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer = new THREE.WebGLRenderer({ ...renderOptions(), alpha: true });
     } catch {
       return; // no WebGL (GPU off, blocked driver): skip the 3D layer, never take the page down
     }
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setPixelRatio(pixelRatio());
     el.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
@@ -65,18 +66,27 @@ export default function Scene() {
 
     // Hero floor: a glowing grid that scrolls toward the camera and fades into fog
     const CELL = 1;
-    const grid = new THREE.GridHelper(60, 60, 0x3dffb0, 0x3dffb0);
+    const grid = new THREE.GridHelper(60, 60);
+    grid.material.vertexColors = false; // colour comes from the theme palette
     grid.material.transparent = true;
-    grid.material.blending = THREE.AdditiveBlending;
     grid.position.y = -2.4;
     scene.add(grid);
     scene.fog = new THREE.Fog(0x050806, 7, 26);
 
-    const N = 900;
+    const N = LOW_POWER ? 250 : 900;
     const pos = new Float32Array(N * 3);
     for (let i = 0; i < N; i++) pos.set([(Math.random() - 0.5) * 14, (Math.random() - 0.5) * 9, (Math.random() - 0.5) * 6], i * 3);
     const dustGeo = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    scene.add(new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: 0x9dffd8, size: 0.025, opacity: 0.6, ...additive })));
+    const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ size: 0.025, opacity: 0.6, ...additive }));
+    scene.add(dust);
+
+    const unbindTheme = bindTheme(
+      [
+        [ringMeshes[0].material, 'em'], [ringMeshes[1].material, 'or'], [ringMeshes[2].material, 'w'],
+        [shell.material, 'em'], [inner.material, 'or'], [halo.material, 'dust'], [grid.material, 'em'], [dust.material, 'dust'],
+      ],
+      (p) => scene.fog.color.setHex(p.bg)
+    );
 
     const resize = () => {
       renderer.setSize(innerWidth, innerHeight);
@@ -142,6 +152,7 @@ export default function Scene() {
 
     return () => {
       cancelAnimationFrame(id);
+      unbindTheme();
       removeEventListener('resize', resize);
       removeEventListener('pointermove', move);
       renderer.dispose();

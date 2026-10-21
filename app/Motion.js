@@ -1,5 +1,6 @@
 'use client';
 import Script from 'next/script';
+import { LOW_POWER } from './palette3d';
 
 // Subresource Integrity: the browser refuses a file whose hash doesn't match (tampered CDN).
 const CDN = [
@@ -47,6 +48,8 @@ function init() {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return ready();
 
   gsap.registerPlugin(ScrollTrigger);
+  // The mobile address bar showing/hiding fires resize; don't recalculate every trigger for it.
+  ScrollTrigger.config({ ignoreMobileResize: true });
   document.documentElement.classList.add('motion');
 
   // Smooth scroll driven by GSAP's ticker so ScrollTrigger stays in sync.
@@ -65,19 +68,20 @@ function init() {
   const h1 = document.querySelector('.hero-name');
   h1?.setAttribute('aria-label', h1.textContent.replace(/\s+/g, ' ').trim());
   const nameChars = gsap.utils.toArray('.hero-name .line').flatMap((l) => split(l));
-  gsap.timeline({ delay: 0.55, defaults: { ease: 'expo.out', duration: 1.6 } })
+  const intro = gsap.timeline({ delay: 0.55, defaults: { ease: 'expo.out', duration: 1.6 } })
     .from('.hero-bg > *', { scale: 1.3, opacity: 0, duration: 2.6 })
     .from(nameChars, { yPercent: 115, rotate: 6, stagger: 0.035 }, 0.2)
     .from('.hero-me .me', { opacity: 0, y: 120, scale: 1.1, duration: 2.2 }, 0.35)
-    .from('.hero-me .ghost', { opacity: 0, duration: 1.2 }, 1.6)
-    .from('.hero-me', { '--blur': '40px', duration: 2.6 }, 0.35)
     .from('.scene', { opacity: 0, duration: 2 }, 0.8)
     .from('.hero-meta > *, .nav > *', { opacity: 0, y: 24, stagger: 0.08 }, 1.1);
+  // Animating blur filters repaints every frame: desktop only
+  if (!LOW_POWER) intro.from('.hero-me .ghost', { opacity: 0, duration: 1.2 }, 1.6).from('.hero-me', { '--blur': '40px', duration: 2.6 }, 0.35);
   ready();
 
   // Terminal types itself out, then loops
   const typed = gsap.utils.toArray('.term [data-type]');
-  if (typed.length) {
+  const termShown = typed.length && getComputedStyle(document.querySelector('.term')).display !== 'none';
+  if (termShown) {
     const full = typed.map((el) => el.textContent);
     const rows = typed.map((el) => el.closest('p'));
     // Lines stay hidden until the "typing" reaches them; the final prompt shows at the end.
@@ -100,7 +104,7 @@ function init() {
 
   // Ghost trail: echoes are pushed opposite to pointer/scroll velocity, then decay back
   const ghosts = gsap.utils.toArray('.hero-me .ghost');
-  if (ghosts.length) {
+  if (ghosts.length && !LOW_POWER) {
     let px = null, vx = 0, vy = 0, lastY = scrollY;
     addEventListener('pointermove', (e) => { if (px !== null) vx += (e.clientX - px) * 0.5; px = e.clientX; });
     const set = ghosts.map((g) => [gsap.quickSetter(g, 'x', 'px'), gsap.quickSetter(g, 'y', 'px')]);
@@ -146,7 +150,7 @@ function init() {
   gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } })
     .to('.hero-name .line:first-child', { xPercent: -25 }, 0)
     .to('.hero-name .line:last-child', { xPercent: 25 }, 0)
-    .to('.hero-me', { yPercent: 18, scale: 0.86, filter: 'blur(8px)', opacity: 0.3 }, 0)
+    .to('.hero-me', { yPercent: 18, scale: 0.86, opacity: 0.3, ...(LOW_POWER ? {} : { filter: 'blur(8px)' }) }, 0)
     .to('.hero-cards', { y: 140, opacity: 0 }, 0)
     .to('.hero-bg', { scale: 1.15, opacity: 0.4 }, 0);
 

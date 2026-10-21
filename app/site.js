@@ -16,10 +16,11 @@ export const site = {
   // Hero recruiter card. availability: '' hides the badge. resume: e.g. '/resume.pdf' (put the file in public/).
   availability: 'Open to internships & junior roles',
   resume: '',
+  // Rendered as a bash script (hire.sh): v → "string", list → (array), note → # comment.
   highlights: [
-    { k: 'Shipped', v: 'Tugon — live emergency-response app', href: 'https://www.tugon.live' },
-    { k: 'Built', v: 'Web, mobile & APIs: Next.js · Flutter · FastAPI' },
-    { k: 'Secures', v: 'bcrypt · JWT · RBAC · rate limits · OWASP' },
+    { k: 'SHIPPED', v: 'tugon.live', note: 'live emergency-response app', href: 'https://www.tugon.live' },
+    { k: 'STACK', list: ['next.js', 'flutter', 'fastapi', 'postgresql'] },
+    { k: 'SECURES', list: ['bcrypt', 'jwt', 'rbac', 'rate-limits', 'owasp'] },
   ],
   // Hero terminal (typed out on load).
   terminal: [

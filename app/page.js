@@ -1,5 +1,6 @@
 import Scene from './Scene';
 import StoryScene from './StoryScene';
+import ThemeToggle from './ThemeToggle';
 import Motion from './Motion';
 import { site } from './site';
 
@@ -20,11 +21,17 @@ const jsonLd = {
 
 const pad = (n) => String(n + 1).padStart(2, '0');
 
+// External links open in a new tab so visitors keep the portfolio open.
+const ext = { target: '_blank', rel: 'noopener noreferrer' };
+
 function Case({ p, i, total }) {
+  // With a live site the whole browser frame is a link to it.
+  const Frame = p.links.live ? 'a' : 'div';
+  const frameProps = p.links.live ? { href: p.links.live, ...ext, 'aria-label': `Open ${p.title} live site` } : {};
   return (
     <article className="case">
-      <div className="case-media">
-        <div className="case-bar" aria-hidden="true"><i /><i /><i /><span className="mono">{p.bar}</span></div>
+      <Frame className="case-media" {...frameProps}>
+        <div className="case-bar" aria-hidden="true"><i /><i /><i /><span className="mono">{p.bar}{p.links.live && ' ↗'}</span></div>
         <div className="case-shot">
           {p.image ? (
             <img src={p.image} alt={`${p.title} preview`} loading="lazy" data-parallax="4" />
@@ -35,8 +42,9 @@ function Case({ p, i, total }) {
               <span className="mono ph-caption">Preview coming soon</span>
             </div>
           )}
+          {p.links.live && <span className="case-visit mono" aria-hidden="true">Visit {p.bar} ↗</span>}
         </div>
-      </div>
+      </Frame>
 
       <div className="case-info">
         <p className="mono case-meta">
@@ -58,8 +66,8 @@ function Case({ p, i, total }) {
         )}
         <ul className="chips small" aria-label="Tech stack">{p.stack.map((t) => <li key={t}>{t}</li>)}</ul>
         <p className="case-links">
-          {p.links.live && <a href={p.links.live} className="btn-ghost">Live site ↗</a>}
-          {p.links.code && <a href={p.links.code} className="btn-ghost">View code ↗</a>}
+          {p.links.live && <a href={p.links.live} className="btn-ghost" {...ext}>Live site ↗</a>}
+          {p.links.code && <a href={p.links.code} className="btn-ghost" {...ext}>View code ↗</a>}
         </p>
       </div>
 
@@ -92,6 +100,7 @@ export default function Home() {
           <a href="#mission">Mission</a>
           <a href="#work">Work</a>
           <a href="#contact">Contact</a>
+          <ThemeToggle />
           <a href="#contact" className="nav-hire">Hire me</a>
         </div>
       </nav>
@@ -123,20 +132,31 @@ export default function Home() {
             </div>
           </div>
           <aside className="hire" aria-label="For recruiters">
-            {site.availability && <p className="avail mono"><i />{site.availability}</p>}
-            <ul>
-              {site.highlights.map((h) => (
-                <li key={h.k}>
-                  <span className="mono">{h.k}</span>
-                  {h.href ? <a href={h.href}>{h.v} ↗</a> : <span>{h.v}</span>}
-                </li>
-              ))}
-            </ul>
-            <p className="hire-cta">
-              <a href="#work" className="btn magnetic">View projects</a>
-              <a href="#contact" className="btn-ghost">Get in touch</a>
-              {site.resume && <a href={site.resume} className="btn-ghost" download>Résumé ↓</a>}
-            </p>
+            <div className="case-bar"><i /><i /><i /><span className="mono">hire.sh</span>{site.availability && <b className="live" aria-hidden="true" />}</div>
+            <div className="sh">
+              <p className="sh-c sh-hide">#!/usr/bin/env bash</p>
+              {site.availability && <p><span className="sh-k">STATUS</span>=<span className="sh-s">&quot;{site.availability.toLowerCase()}&quot;</span></p>}
+              <ul className="sh-hide">
+                {site.highlights.map((h) => (
+                  <li key={h.k}>
+                    <span className="sh-k">{h.k}</span>=
+                    {h.list ? (
+                      <span className="sh-p">({h.list.map((x, i) => <span key={x}>{i ? ' ' : ''}<span className="sh-s">{x}</span></span>)})</span>
+                    ) : h.href ? (
+                      <a href={h.href} className="sh-s" {...ext}>&quot;{h.v}&quot; ↗</a>
+                    ) : (
+                      <span className="sh-s">&quot;{h.v}&quot;</span>
+                    )}
+                    {h.note && <span className="sh-c"> # {h.note}</span>}
+                  </li>
+                ))}
+              </ul>
+              <p className="hire-cta">
+                <a href="#work" className="btn magnetic"><span aria-hidden="true">$ </span>./view_projects.sh</a>
+                <a href="#contact" className="btn-ghost"><span aria-hidden="true">$ </span>./contact.sh</a>
+                {site.resume && <a href={site.resume} className="btn-ghost" download><span aria-hidden="true">$ </span>wget resume.pdf</a>}
+              </p>
+            </div>
           </aside>
         </div>
         <div className="hero-meta">
