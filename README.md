@@ -4,7 +4,18 @@ Portfolio of a **software developer and aspiring penetration tester**: I build w
 
 **Live → [gpscrypt.me](https://gpscrypt.me)**
 
-![gpscrypt.me preview](public/og.jpg)
+[![gpscrypt.me front page](docs/home-dark.jpg)](https://gpscrypt.me)
+
+<table>
+  <tr>
+    <td width="72%"><img src="docs/home-light.jpg" alt="Front page in light mode"></td>
+    <td width="28%"><img src="docs/home-mobile.jpg" alt="Front page on mobile"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Light mode</sub></td>
+    <td align="center"><sub>Mobile</sub></td>
+  </tr>
+</table>
 
 ## Featured work
 
@@ -18,8 +29,10 @@ Portfolio of a **software developer and aspiring penetration tester**: I build w
 ## How this site is built
 
 - **Next.js 16** static export — every word is pre-rendered HTML for SEO (JSON-LD, sitemap, Open Graph)
-- **three.js** — orbit rings and a grid floor in the hero that collapse into a wireframe core travelling with the scroll
-- **GSAP + ScrollTrigger + Lenis** — kinetic type, pinned storytelling, 3D card reveals, smooth scroll
+- **three.js** — orbit rings and a grid floor in the hero that collapse into a wireframe core travelling with the scroll, plus a fly-through corridor of holographic screens behind the story
+- **GSAP + ScrollTrigger + Lenis** — kinetic type, a typing terminal, pinned storytelling, 3D card reveals, a pointer-driven ghost trail, smooth scroll
+- **Light & dark mode** — every colour is a theme token; the 3D scenes recolour live
+- **Fast on phones** — lower 3D resolution and particle counts, no per-frame blur or blend effects; falls back gracefully when WebGL is unavailable
 - **GitHub Actions → GitHub Pages** on a custom domain
 
 ## Security
