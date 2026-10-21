@@ -29,7 +29,7 @@ When upgraded, generate with `seedance_2_0`, `resolution: 1080p`, `mode: std`, `
 4. **Three pillars** — Build / Break / Secure.
 5. **Story** — Builder plate pinned full-screen; three chapters cross-fade (Student → Builder → Breaker) with a progress line.
 6. **Services & community** — big hover rows (emerald fill wipes up) + skill chips.
-7. **Featured work** — "Welcome to the lab." Parallax corridor plate; best GitHub repos auto-pulled at build.
+7. **Featured work** — "Welcome to the lab." Parallax corridor plate, then recruiter-ready case studies (`site.js → projects`): browser-frame screenshot slot (animated placeholder until an image is set) with a shutter-wipe reveal, count-up metrics, tech stack, and Features / Techniques / Security columns.
 8. **Final CTA** — velocity-reactive outline marquee + magnetic email button.
 9. **Footer** — links + giant `gpscrypt.me` wordmark.
 
@@ -65,4 +65,5 @@ No pinning below 900px (chapters stack), grids collapse, cursor off on touch, he
 - `app/Motion.js` — CDN scripts + every GSAP/Lenis animation.
 - `app/Scene.js` — three.js rings/dust, pauses offscreen.
 - `app/globals.css` — style system.
-- `.github/workflows/deploy.yml` — build + deploy to Pages on push and weekly.
+- `.github/workflows/deploy.yml` — build + deploy to Pages on every push (least-privilege token).
+- CDN scripts carry Subresource Integrity hashes.

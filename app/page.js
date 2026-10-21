@@ -2,38 +2,6 @@ import Scene from './Scene';
 import Motion from './Motion';
 import { site } from './site';
 
-const score = (r) => r.stargazers_count * 3 + r.forks_count + (r.description ? 2 : 0) + (r.homepage ? 2 : 0);
-
-// Runs once at build time (static export), so repos refresh on every deploy.
-// GH_PORTFOLIO_TOKEN (your read-only PAT, CI secret) → public + private repos you own.
-// Without it → public repos only. The token never reaches the browser; only repo names/descriptions do.
-async function getRepos() {
-  try {
-    const pat = process.env.GH_PORTFOLIO_TOKEN;
-    const token = pat || process.env.GITHUB_TOKEN;
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    const url = pat
-      ? 'https://api.github.com/user/repos?affiliation=owner&sort=updated&per_page=100'
-      : `https://api.github.com/users/${site.github}/repos?sort=updated&per_page=100`;
-    const res = await fetch(url, { headers });
-    if (!res.ok) throw new Error(res.status);
-    return (await res.json())
-      .filter((r) => !r.fork && !r.archived && r.name.toLowerCase() !== site.github.toLowerCase())
-      // "best" = popularity + presentability; ties keep API order (most recently updated)
-      .sort((a, b) => score(b) - score(a))
-      .slice(0, 6)
-      .map((r) => ({
-        title: r.name.replace(/[-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2'),
-        desc: r.description || 'No description yet.',
-        tags: [r.private && 'Private', r.language, ...r.topics].filter(Boolean).slice(0, 4),
-        // private repo pages 404 for visitors, so only link a live demo if there is one
-        link: r.homepage || (r.private ? null : r.html_url),
-      }));
-  } catch {
-    return [];
-  }
-}
-
 // Seedance clip if provided, otherwise the generated still.
 const Media = ({ img, video, ...p }) =>
   video ? <video src={video} poster={img} autoPlay muted loop playsInline {...p} /> : <img src={img} alt="" {...p} />;
@@ -51,8 +19,61 @@ const jsonLd = {
 
 const pad = (n) => String(n + 1).padStart(2, '0');
 
-export default async function Home() {
-  const projects = [...site.projects, ...(await getRepos())];
+function Case({ p, i, total }) {
+  return (
+    <article className="case">
+      <div className="case-media">
+        <div className="case-bar" aria-hidden="true"><i /><i /><i /><span className="mono">{p.bar}</span></div>
+        <div className="case-shot">
+          {p.image ? (
+            <img src={p.image} alt={`${p.title} preview`} loading="lazy" data-parallax />
+          ) : (
+            <div className="case-placeholder" aria-hidden="true">
+              <span className="ph-ring" />
+              <span className="ph-index">{pad(i)}</span>
+              <span className="mono ph-caption">Preview coming soon</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="case-info">
+        <p className="mono case-meta">
+          <span>{pad(i)} / {pad(total - 1)}</span>
+          <span>{p.kind} · {p.year}</span>
+        </p>
+        <h3>{p.title}</h3>
+        <p className="case-summary">{p.summary}</p>
+        {p.metrics.length > 0 && (
+          <dl className="case-metrics">
+            {p.metrics.map((m) => (
+              <div key={m.label}>
+                <dt className="mono">{m.label}</dt>
+                <dd>{/^\d+$/.test(m.value) ? <span data-count={m.value}>{m.value}</span> : m.value}{m.suffix}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+        <ul className="chips small" aria-label="Tech stack">{p.stack.map((t) => <li key={t}>{t}</li>)}</ul>
+        <p className="case-links">
+          {p.links.live && <a href={p.links.live} className="btn-ghost">Live site ↗</a>}
+          {p.links.code && <a href={p.links.code} className="btn-ghost">View code ↗</a>}
+        </p>
+      </div>
+
+      <div className="case-details" data-reveal>
+        {[['Features', p.features], ['Techniques', p.techniques], ['Security', p.security]].map(([h, items]) => (
+          <div key={h} className={h === 'Security' ? 'sec' : undefined}>
+            <h4 className="mono">{h}</h4>
+            <ul>{items.map((x) => <li key={x}>{x}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </article>
+  );
+}
+
+export default function Home() {
   const [host, tld] = new URL(site.url).hostname.split('.');
   const [first, ...rest] = site.name.split(' ');
 
@@ -163,28 +184,21 @@ export default async function Home() {
 
         {/* ── WORK ── */}
         <section id="work" className="work">
-          <div className="work-bg"><Media img="/lab.webp" video={site.videos.lab} data-parallax /></div>
-          <div className="work-inner">
-            <p className="mono eyebrow">(05) Featured work</p>
-            <h2 className="kinetic">Welcome to the lab.</h2>
-            <div className="grid" data-reveal>
-              {projects.map((p) => {
-                const Card = p.link ? 'a' : 'article';
-                return (
-                  <Card key={p.title} href={p.link || undefined} className="card">
-                    <h3>{p.title}</h3>
-                    <p>{p.desc}</p>
-                    <ul className="chips small">{p.tags.map((t) => <li key={t}>{t}</li>)}</ul>
-                    <span className="mono">{p.link ? 'View project ↗' : 'Private repository'}</span>
-                  </Card>
-                );
-              })}
-              <a href={site.socials.GitHub} className="card more">
-                <h3>More on GitHub</h3>
-                <span className="mono">github.com/{site.github} ↗</span>
-              </a>
+          <div className="work-head">
+            <div className="work-bg"><Media img="/lab.webp" video={site.videos.lab} data-parallax /></div>
+            <div className="work-inner">
+              <p className="mono eyebrow">(05) Featured work</p>
+              <h2 className="kinetic">Welcome to the lab.</h2>
+              <p className="work-lead">
+                {site.projects.length} builds — from cinematic front-ends to enterprise infrastructure — each with the
+                stack, techniques and security decisions behind it.
+              </p>
             </div>
           </div>
+          <div className="cases">
+            {site.projects.map((p, i) => <Case key={p.title} p={p} i={i} total={site.projects.length} />)}
+          </div>
+          <a href={site.socials.GitHub} className="more mono">More on GitHub — github.com/{site.github} ↗</a>
         </section>
 
         {/* ── CTA ── */}

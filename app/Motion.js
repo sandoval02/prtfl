@@ -1,10 +1,11 @@
 'use client';
 import Script from 'next/script';
 
+// Subresource Integrity: the browser refuses a file whose hash doesn't match (tampered CDN).
 const CDN = [
-  'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js',
-  'https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js',
+  ['https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js', 'sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA=='],
+  ['https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js', 'sha512-P2IDYZfqSwjcSjX0BKeNhwRUH8zRPGlgcWl5n6gBLzdi4Y5/0O4zaXrtO4K9TZK6Hn1BenYpKowuCavNandERg=='],
+  ['https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js', 'sha256-Z/D+DPxnImnO1r8M9EkTyj16YCNaifmpPGb1dnrepyk='],
 ];
 
 const ready = () => document.documentElement.classList.add('ready');
@@ -120,6 +121,14 @@ function init() {
     gsap.fromTo(el, { yPercent: -12 }, { yPercent: 12, ease: 'none', scrollTrigger: { trigger: el.parentElement, scrub: true } })
   );
 
+  // Project frames open like a shutter as they scroll in
+  gsap.utils.toArray('.case-media').forEach((m) =>
+    gsap.fromTo(m, { clipPath: 'inset(14% 10% 14% 10% round 1.25rem)', scale: 0.94 }, {
+      clipPath: 'inset(0% 0% 0% 0% round 1.25rem)', scale: 1, ease: 'none',
+      scrollTrigger: { trigger: m, start: 'top 95%', end: 'top 45%', scrub: true },
+    })
+  );
+
   const mm = gsap.matchMedia();
   mm.add('(min-width: 900px)', () => {
     // Story: pinned, chapters cross-fade while the plate slowly pushes in
@@ -165,5 +174,7 @@ function init() {
 }
 
 export default function Motion() {
-  return CDN.map((src) => <Script key={src} src={src} strategy="afterInteractive" onReady={init} />);
+  return CDN.map(([src, integrity]) => (
+    <Script key={src} src={src} integrity={integrity} crossOrigin="anonymous" strategy="afterInteractive" onReady={init} />
+  ));
 }
