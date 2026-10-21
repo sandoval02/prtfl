@@ -61,7 +61,12 @@ export default function StoryScene({ fallback }) {
   useEffect(() => {
     const el = ref.current;
     const section = el.closest('section');
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+    } catch {
+      return; // no WebGL: the builder photo (CSS background) stays as the story backdrop
+    }
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
     el.appendChild(renderer.domElement);
 

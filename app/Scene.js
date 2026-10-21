@@ -21,7 +21,12 @@ export default function Scene() {
 
   useEffect(() => {
     const el = ref.current;
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch {
+      return; // no WebGL (GPU off, blocked driver): skip the 3D layer, never take the page down
+    }
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
     el.appendChild(renderer.domElement);
 
