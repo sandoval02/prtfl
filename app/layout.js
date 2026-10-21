@@ -1,9 +1,10 @@
-import { Orbitron, Inter } from 'next/font/google';
+import { Syne, Inter, JetBrains_Mono } from 'next/font/google';
 import { site } from './site';
 import './globals.css';
 
-const display = Orbitron({ subsets: ['latin'], variable: '--font-display' });
+const display = Syne({ subsets: ['latin'], weight: ['700', '800'], variable: '--font-display' });
 const body = Inter({ subsets: ['latin'], variable: '--font-body' });
+const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
 const title = `${site.name} — ${site.role}`;
 
@@ -12,15 +13,21 @@ export const metadata = {
   title,
   description: site.tagline,
   alternates: { canonical: '/' },
-  openGraph: { title, description: site.tagline, url: '/', type: 'website', images: ['/hero.webp'] },
-  twitter: { card: 'summary_large_image', title, description: site.tagline, images: ['/hero.webp'] },
+  openGraph: { title, description: site.tagline, url: '/', type: 'profile', images: ['/og.jpg'] },
+  twitter: { card: 'summary_large_image', title, description: site.tagline, images: ['/og.jpg'] },
 };
 
-export const viewport = { themeColor: '#05010f' };
+export const viewport = { themeColor: '#050806' };
+
+// Hides intro elements until GSAP has set their start state; 4s failsafe if the CDN is down.
+const boot = "document.documentElement.classList.add('js');setTimeout(function(){document.documentElement.classList.add('ready')},4000)";
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable}`}>
+    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: boot }} />
+      </head>
       <body>{children}</body>
     </html>
   );
