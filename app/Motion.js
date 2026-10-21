@@ -68,6 +68,7 @@ function init() {
     .from('.hero-bg > *', { scale: 1.3, opacity: 0, duration: 2.6 })
     .from(nameChars, { yPercent: 115, rotate: 6, stagger: 0.035 }, 0.2)
     .from('.hero-me img', { opacity: 0, y: 120, scale: 1.1, duration: 2.2 }, 0.35)
+    .from('.hero-me', { '--blur': '40px', duration: 2.6 }, 0.35)
     .from('.scene', { opacity: 0, duration: 2 }, 0.8)
     .from('.hero-meta > *, .nav > *', { opacity: 0, y: 24, stagger: 0.08 }, 1.1);
   ready();
