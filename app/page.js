@@ -133,7 +133,7 @@ export default function Home() {
         <section className="pillars">
           <p className="mono eyebrow">(02) What drives me</p>
           <h2 className="kinetic">Build. Break. Secure.</h2>
-          <div className="pillar-grid" data-reveal>
+          <div className="pillar-grid">
             {site.pillars.map((p, i) => (
               <article key={p.title} className="pillar">
                 <span className="mono">{pad(i)}</span>

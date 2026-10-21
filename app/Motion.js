@@ -81,13 +81,26 @@ function init() {
     .to('.hero-me', { yPercent: 18, scale: 0.86, filter: 'blur(8px)', opacity: 0.3 }, 0)
     .to('.hero-bg', { scale: 1.15, opacity: 0.4 }, 0);
 
-  // Big headings: masked char reveal
+  // Big headings: chars flip up in 3D out of their word masks
   gsap.utils.toArray('.kinetic').forEach((h) =>
     gsap.from(split(h), {
-      yPercent: 110, stagger: 0.025, duration: 1.2, ease: 'expo.out',
+      yPercent: 110, rotationX: -90, transformOrigin: '50% 100%', transformPerspective: 600,
+      stagger: 0.025, duration: 1.2, ease: 'expo.out',
       scrollTrigger: { trigger: h, start: 'top 85%' },
     })
   );
+
+  // Mission paragraph tilts upright as it scrolls in
+  gsap.fromTo('.scrub-words', { rotationX: 30, transformPerspective: 1000, transformOrigin: '50% 100%' }, {
+    rotationX: 0, ease: 'none', scrollTrigger: { trigger: '.mission', start: 'top bottom', end: 'center center', scrub: true },
+  });
+
+  // Pillars fold down like cards
+  gsap.from('.pillar', {
+    rotationX: -80, y: 60, opacity: 0, transformOrigin: '50% 0%', transformPerspective: 900,
+    stagger: 0.15, duration: 1.4, ease: 'expo.out',
+    scrollTrigger: { trigger: '.pillar-grid', start: 'top 85%' },
+  });
 
   // Mission: words light up as you scroll
   gsap.utils.toArray('.scrub-words').forEach((p) =>
@@ -122,11 +135,14 @@ function init() {
     gsap.fromTo(el, { yPercent: -a }, { yPercent: a, ease: 'none', scrollTrigger: { trigger: el.parentElement, scrub: true } });
   });
 
-  // Project frames open like a shutter as they scroll in
-  gsap.utils.toArray('.case-media').forEach((m) =>
-    gsap.fromTo(m, { clipPath: 'inset(14% 10% 14% 10% round 1.25rem)', scale: 0.94 }, {
-      clipPath: 'inset(0% 0% 0% 0% round 1.25rem)', scale: 1, ease: 'none',
-      scrollTrigger: { trigger: m, start: 'top 95%', end: 'top 45%', scrub: true },
+  // Project frames swing in from 3D and open like a shutter (alternating sides)
+  gsap.utils.toArray('.case-media').forEach((m, i) =>
+    gsap.fromTo(m, {
+      clipPath: 'inset(14% 10% 14% 10% round 1.25rem)', scale: 0.94,
+      rotationX: 16, rotationY: i % 2 ? -14 : 14, transformPerspective: 1400,
+    }, {
+      clipPath: 'inset(0% 0% 0% 0% round 1.25rem)', scale: 1, rotationX: 0, rotationY: 0, ease: 'none',
+      scrollTrigger: { trigger: m, start: 'top 95%', end: 'top 40%', scrub: true },
     })
   );
 
