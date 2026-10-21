@@ -10,21 +10,23 @@ const CDN = [
 
 const ready = () => document.documentElement.classList.add('ready');
 
-// Splits text into word (and char) spans for kinetic type. Words stay unbreakable;
-// a visually-hidden copy keeps the text readable for screen readers.
+// Splits text into word (and char) spans for kinetic type. Words stay unbreakable.
+// Char-split headings get an aria-label so screen readers don't spell them out
+// (no hidden duplicate text, so copy/paste stays clean).
 function split(el, by = 'char') {
   const text = el.textContent.trim();
   el.textContent = '';
   const out = [];
+  if (by === 'char' && /^H\d$/.test(el.tagName)) el.setAttribute('aria-label', text);
   text.split(/\s+/).forEach((word, i) => {
     if (i) el.append(' ');
     const w = document.createElement('span');
     w.className = 'word';
-    w.setAttribute('aria-hidden', 'true');
     if (by === 'word') {
       w.textContent = word;
       out.push(w);
     } else {
+      w.setAttribute('aria-hidden', 'true');
       for (const c of word) {
         const s = document.createElement('span');
         s.className = 'char';
@@ -35,10 +37,6 @@ function split(el, by = 'char') {
     }
     el.append(w);
   });
-  const sr = document.createElement('span');
-  sr.className = 'sr-only';
-  sr.textContent = text;
-  el.append(sr);
   return out;
 }
 
@@ -64,11 +62,14 @@ function init() {
   );
 
   // Intro (curtain lifts via CSS when .ready lands)
+  const h1 = document.querySelector('.hero-name');
+  h1?.setAttribute('aria-label', h1.textContent.replace(/\s+/g, ' ').trim());
   const nameChars = gsap.utils.toArray('.hero-name .line').flatMap((l) => split(l));
   gsap.timeline({ delay: 0.55, defaults: { ease: 'expo.out', duration: 1.6 } })
     .from('.hero-bg > *', { scale: 1.3, opacity: 0, duration: 2.6 })
     .from(nameChars, { yPercent: 115, rotate: 6, stagger: 0.035 }, 0.2)
-    .from('.hero-me img', { opacity: 0, y: 120, scale: 1.1, duration: 2.2 }, 0.35)
+    .from('.hero-me .me', { opacity: 0, y: 120, scale: 1.1, duration: 2.2 }, 0.35)
+    .from('.hero-me .ghost', { opacity: 0, duration: 1.2 }, 1.6)
     .from('.hero-me', { '--blur': '40px', duration: 2.6 }, 0.35)
     .from('.scene', { opacity: 0, duration: 2 }, 0.8)
     .from('.hero-meta > *, .nav > *', { opacity: 0, y: 24, stagger: 0.08 }, 1.1);
@@ -95,6 +96,22 @@ function init() {
       });
     });
     term.set('.term-body > .t-cmd', { autoAlpha: 1 });
+  }
+
+  // Ghost trail: echoes are pushed opposite to pointer/scroll velocity, then decay back
+  const ghosts = gsap.utils.toArray('.hero-me .ghost');
+  if (ghosts.length) {
+    let px = null, vx = 0, vy = 0, lastY = scrollY;
+    addEventListener('pointermove', (e) => { if (px !== null) vx += (e.clientX - px) * 0.5; px = e.clientX; });
+    const set = ghosts.map((g) => [gsap.quickSetter(g, 'x', 'px'), gsap.quickSetter(g, 'y', 'px')]);
+    const clamp = gsap.utils.clamp(-180, 180);
+    gsap.ticker.add(() => {
+      vy += (scrollY - lastY) * 0.6;
+      lastY = scrollY;
+      vx *= 0.9;
+      vy *= 0.9;
+      set.forEach(([sx, sy], i) => { sx(clamp(-vx * (i + 1) * 0.7)); sy(clamp(-vy * (i + 1) * 0.7)); });
+    });
   }
 
   const heroMM = gsap.matchMedia();
@@ -205,7 +222,6 @@ function init() {
     const tl = gsap.timeline({
       scrollTrigger: { trigger: '.story', start: 'top top', end: `+=${chapters.length * 90}%`, scrub: 1, pin: true },
     });
-    tl.fromTo('.story-bg', { scale: 1.25 }, { scale: 1, duration: chapters.length, ease: 'none' }, 0);
     tl.fromTo('.story-progress i', { scaleX: 0 }, { scaleX: 1, duration: chapters.length, ease: 'none' }, 0);
     chapters.forEach((c, i) => {
       if (i) tl.fromTo(c, { opacity: 0, yPercent: 40 }, { opacity: 1, yPercent: 0, duration: 0.4 }, i - 0.2);

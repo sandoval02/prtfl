@@ -34,7 +34,7 @@ export const site = {
 
   // Counted from the featured repos (Oct 2026).
   stats: [
-    { value: 470, suffix: '+', label: 'Commits on featured projects' },
+    { value: 670, suffix: '+', label: 'Commits on featured projects' },
     { value: 480, suffix: '', label: 'API endpoints across projects' },
     { value: 186, suffix: '', label: 'Automated API tests (Tugon)' },
     { value: 100, suffix: '%', label: 'Curiosity' },
@@ -71,27 +71,30 @@ export const site = {
     {
       title: 'Tugon',
       bar: 'tugon.live',
-      kind: 'Mobile App · Emergency response',
+      kind: 'Mobile App + Admin Dashboard · Emergency response',
       year: '2026',
-      role: 'Full-stack developer · team of 2 · ~65% of commits',
+      role: 'Full-stack developer · team of 2 · ~64% of commits',
       summary:
-        'Emergency-response platform for the municipality of Liliw. Citizens report incidents, responders are dispatched and tracked live, and AI helps triage reports.',
+        'Emergency-response platform for the municipality of Liliw. Citizens report incidents from the mobile app; staff dispatch and track responders live from a web command center, and AI helps triage reports.',
       image: '/projects/tugon.webp',
       metrics: [
         { value: '216', label: 'API endpoints' },
         { value: '58', label: 'Mobile screens' },
+        { value: '70', label: 'Admin pages' },
         { value: '10', label: 'User roles' },
       ],
-      stack: ['Flutter', 'Dart', 'FastAPI', 'Python', 'PostgreSQL (Supabase)', 'SQLAlchemy', 'Redis', 'Firebase Cloud Messaging', 'Gemini API', 'Render'],
+      stack: ['Flutter', 'Dart', 'FastAPI', 'Python', 'Next.js', 'TypeScript', 'PostgreSQL (Supabase)', 'Prisma', 'SQLAlchemy', 'Redis', 'Firebase Cloud Messaging', 'Gemini API', 'Leaflet / Google Maps', 'Render'],
       features: [
         'Citizens report incidents with photos and voice input',
+        'Web command center: dispatch, live tracking, incidents and evacuation',
+        'Separate officer portal for patrols, attendance and reports',
         'Live responder tracking on a map over WebSockets',
-        'Mission dispatch to responders with push notifications',
-        'Responder attendance with GPS and face-match checks',
+        'Mission dispatch with push notifications; GPS and face-match attendance',
         'AI report triage with descriptive and predictive analytics',
       ],
       techniques: [
         'Async FastAPI with a pooled, pre-warmed PostgreSQL connection',
+        'Admin on Next.js with Prisma (34 models), TanStack Table and Recharts',
         'Redis rate limiting with an in-memory fallback',
         'TTL response cache that is invalidated on writes',
         'Multi-provider AI router with priority and cooldown fallback',
@@ -100,7 +103,8 @@ export const site = {
       security: [
         'bcrypt password hashing',
         'JWT sessions with an active-account check on every request',
-        'Role-based guard on 39 admin endpoints',
+        'Role-based guard on 39 admin endpoints; admin routes split by role',
+        'Session JWT kept in an httpOnly cookie, forwarded server-side',
         'Per-IP and per-account rate limits on login, signup and OTP',
         'Hashed, expiring email OTPs capped at 5 attempts',
       ],

@@ -1,4 +1,5 @@
 import Scene from './Scene';
+import StoryScene from './StoryScene';
 import Motion from './Motion';
 import { site } from './site';
 
@@ -104,7 +105,9 @@ export default function Home() {
         </h1>
         <Scene />
         <div className="hero-me">
-          <img src="/me.webp" alt={`Portrait of ${site.name}`} width="756" height="1356" fetchPriority="high" />
+          {/* ghost trail: tinted echoes that lag behind pointer and scroll motion */}
+          {[0, 1, 2].map((k) => <img key={k} src="/me.webp" alt="" aria-hidden="true" className="ghost" width="756" height="1356" />)}
+          <img src="/me.webp" alt={`Portrait of ${site.name}`} width="756" height="1356" fetchPriority="high" className="me" />
         </div>
         <div className="hero-cards">
           <div className="term" aria-hidden="true">
@@ -177,7 +180,9 @@ export default function Home() {
 
         {/* ── STORY ── */}
         <section className="story" aria-label="My story">
-          <Media img="/builder.webp" video={site.videos.builder} className="story-bg" />
+          {site.videos.builder
+            ? <Media img="/builder.webp" video={site.videos.builder} className="story-bg" />
+            : <StoryScene fallback="/builder.webp" />}
           <div className="story-shade" />
           <p className="mono eyebrow">(03) The story</p>
           <div className="chapters">
