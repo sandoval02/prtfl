@@ -73,7 +73,7 @@ function init() {
     .from(nameChars, { yPercent: 115, rotate: 6, stagger: 0.035 }, 0.2)
     .from('.hero-me .me', { opacity: 0, y: 120, scale: 1.1, duration: 2.2 }, 0.35)
     .from('.scene', { opacity: 0, duration: 2 }, 0.8)
-    .from('.hero-meta > *, .nav > *', { opacity: 0, y: 24, stagger: 0.08 }, 1.1);
+    .from('.hero-meta > *, .hero-role, .nav > *', { opacity: 0, y: 24, stagger: 0.08 }, 1.1);
   // Animating blur filters repaints every frame: desktop only
   if (!LOW_POWER) intro.from('.hero-me .ghost', { opacity: 0, duration: 1.2 }, 1.6).from('.hero-me', { '--blur': '40px', duration: 2.6 }, 0.35);
   ready();
@@ -152,6 +152,7 @@ function init() {
     .to('.hero-name .line:last-child', { xPercent: 25 }, 0)
     .to('.hero-me', { yPercent: 18, scale: 0.86, opacity: 0.3, ...(LOW_POWER ? {} : { filter: 'blur(8px)' }) }, 0)
     .to('.hero-cards', { y: 140, opacity: 0 }, 0)
+    .to('.hero-role', { opacity: 0 }, 0)
     .to('.hero-bg', { scale: 1.15, opacity: 0.4 }, 0);
 
   // Big headings: chars flip up in 3D out of their word masks

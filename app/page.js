@@ -108,10 +108,14 @@ export default function Home() {
       {/* ── HERO ── */}
       <header id="top" className="hero">
         <div className="hero-bg"><Media img="/void.webp" video={site.videos.hero} /></div>
-        <h1 className="hero-name">
-          <span className="line">{first}</span>{' '}
-          <span className="line outline">{rest.join(' ')}</span>
-        </h1>
+        <div className="hero-title">
+          <h1 className="hero-name">
+            <span className="line">{first}</span>{' '}
+            <span className="line outline">{rest.join(' ')}</span>
+          </h1>
+          {/* phones/tablets: the role sits under the name (the bottom meta line is covered there) */}
+          <p className="hero-role mono">{site.role}</p>
+        </div>
         <Scene />
         <div className="hero-me">
           {/* ghost trail: tinted echoes that lag behind pointer and scroll motion */}
