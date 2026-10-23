@@ -8,15 +8,30 @@ import { site } from './site';
 const Media = ({ img, video, ...p }) =>
   video ? <video src={video} poster={img} autoPlay muted loop playsInline {...p} /> : <img src={img} alt="" {...p} />;
 
+// Structured data: lets Google tie the name, this site, GitHub and the projects to one person.
+const person = { '@id': `${site.url}/#person` };
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: site.name,
-  jobTitle: site.role,
-  url: site.url,
-  image: `${site.url}/me.webp`,
-  knowsAbout: [...site.skills, ...site.security],
-  sameAs: Object.values(site.socials),
+  '@graph': [
+    {
+      '@type': 'Person', ...person, name: site.name, url: site.url, image: `${site.url}/me.webp`,
+      jobTitle: ['Software Developer', 'Aspiring Penetration Tester'], description: site.seoDescription,
+      address: { '@type': 'PostalAddress', addressCountry: 'PH' },
+      knowsAbout: [...site.skills, ...site.security], sameAs: Object.values(site.socials),
+    },
+    { '@type': 'WebSite', '@id': `${site.url}/#website`, url: site.url, name: site.name, inLanguage: 'en', publisher: person },
+    { '@type': 'ProfilePage', url: site.url, name: site.seoTitle, mainEntity: person, about: person },
+    {
+      '@type': 'ItemList', name: 'Featured projects',
+      itemListElement: site.projects.map((p, i) => ({
+        '@type': 'ListItem', position: i + 1,
+        item: {
+          '@type': 'CreativeWork', name: p.title, description: p.summary, creator: person, dateCreated: p.year,
+          keywords: p.stack.join(', '), ...(p.links.live || p.links.code ? { url: p.links.live || p.links.code } : {}),
+        },
+      })),
+    },
+  ],
 };
 
 const pad = (n) => String(n + 1).padStart(2, '0');

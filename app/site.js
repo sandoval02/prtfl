@@ -8,6 +8,12 @@ export const site = {
   tagline: 'I build fast, immersive software — and learn to break it, so I can make it secure.',
   email: 'hello@gpscrypt.me', // set up as a forwarding alias in Namecheap → Email Forwarding
   location: 'Philippines', // ← change if needed
+  // SEO: shown in Google results (keep description ~150 chars).
+  seoTitle: 'Geoff Sandoval — Software Developer & Aspiring Penetration Tester',
+  seoDescription:
+    'Geoff Sandoval is a software developer and aspiring penetration tester from the Philippines building secure web and mobile apps with Next.js, Flutter and FastAPI.',
+  // Google Search Console → "HTML tag" method: paste only the content="..." value here.
+  googleVerification: '',
   github,
   socials: {
     GitHub: `https://github.com/${github}`,

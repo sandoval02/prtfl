@@ -6,15 +6,30 @@ const display = Syne({ subsets: ['latin'], weight: ['700', '800'], variable: '--
 const body = Inter({ subsets: ['latin'], variable: '--font-body' });
 const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
-const title = `${site.name} — ${site.role}`;
+const title = site.seoTitle;
+const description = site.seoDescription;
+const ogImage = { url: '/og.jpg', width: 1200, height: 630, alt: `${site.name} — portfolio front page` };
+const [firstName, ...lastName] = site.name.split(' ');
 
 export const metadata = {
   metadataBase: new URL(site.url),
   title,
-  description: site.tagline,
+  description,
+  applicationName: new URL(site.url).hostname,
+  authors: [{ name: site.name, url: site.url }],
+  creator: site.name,
+  keywords: [
+    site.name, 'software developer', 'aspiring penetration tester', 'full-stack developer', 'web developer Philippines',
+    'Next.js', 'Flutter', 'FastAPI', 'cybersecurity', 'portfolio',
+  ],
   alternates: { canonical: '/' },
-  openGraph: { title, description: site.tagline, url: '/', type: 'profile', images: ['/og.jpg'] },
-  twitter: { card: 'summary_large_image', title, description: site.tagline, images: ['/og.jpg'] },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
+  openGraph: {
+    title, description, url: '/', siteName: site.name, locale: 'en_US', type: 'profile',
+    firstName, lastName: lastName.join(' '), images: [ogImage],
+  },
+  twitter: { card: 'summary_large_image', title, description, images: [ogImage] },
+  ...(site.googleVerification && { verification: { google: site.googleVerification } }),
 };
 
 export const viewport = { themeColor: '#050806' };
