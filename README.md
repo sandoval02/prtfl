@@ -1,4 +1,4 @@
-# gpscrypt.me — Geoff Sandoval
+# gpscrypt.me | Geoff Sandoval
 
 Portfolio of a **software developer and aspiring penetration tester**: I build web and mobile apps, then try to break them.
 
@@ -21,18 +21,18 @@ Portfolio of a **software developer and aspiring penetration tester**: I build w
 
 | Project | What it is | Stack |
 |---|---|---|
-| **Tugon** | Emergency-response platform for Liliw — live at [tugon.live](https://www.tugon.live) | Flutter · FastAPI · PostgreSQL · Redis |
+| **Tugon** | Emergency-response platform for Liliw, live at [tugon.live](https://www.tugon.live) | Flutter · FastAPI · PostgreSQL · Redis |
 | **Applischo** | Scholarship management: applications, exams, explainable scoring, payouts | Next.js · TypeScript · Supabase |
 | **Eterna** | Artisan marketplace with buyer, seller, rider and admin portals | React · Flask · PostgreSQL · Socket.IO |
 | **System Administration Portfolio** | Enterprise infrastructure plan and server deployment labs | Ubuntu Server · Windows Server · OpenSSH |
 
 ## How this site is built
 
-- **Next.js 16** static export — every word is pre-rendered HTML for SEO (JSON-LD, sitemap, Open Graph)
-- **three.js** — orbit rings and a grid floor in the hero that collapse into a wireframe core travelling with the scroll, plus a fly-through corridor of holographic screens behind the story
-- **GSAP + ScrollTrigger + Lenis** — kinetic type, a typing terminal, pinned storytelling, 3D card reveals, a pointer-driven ghost trail, smooth scroll
-- **Light & dark mode** — every colour is a theme token; the 3D scenes recolour live
-- **Fast on phones** — lower 3D resolution and particle counts, no per-frame blur or blend effects; falls back gracefully when WebGL is unavailable
+- **Next.js 16** static export, every word is pre-rendered HTML for SEO (JSON-LD, sitemap, Open Graph)
+- **three.js**: orbit rings and a grid floor in the hero that collapse into a wireframe core travelling with the scroll, plus a fly-through corridor of holographic screens behind the story
+- **GSAP + ScrollTrigger + Lenis**: kinetic type, a typing terminal, pinned storytelling, 3D card reveals, a pointer-driven ghost trail, smooth scroll
+- **Light & dark mode**: every colour is a theme token; the 3D scenes recolour live
+- **Fast on phones**: lower 3D resolution and particle counts, no per-frame blur or blend effects; falls back gracefully when WebGL is unavailable
 - **GitHub Actions → GitHub Pages** on a custom domain
 
 ## Security

@@ -5,13 +5,13 @@ export const site = {
   url: 'https://gpscrypt.me',
   name: 'Geoff Sandoval',
   role: 'Software Developer · Aspiring Penetration Tester',
-  tagline: 'I build fast, immersive software — and learn to break it, so I can make it secure.',
+  tagline: 'I build fast, reliable software, and I learn to break it so I can make it secure.',
   email: 'hello@gpscrypt.me', // set up as a forwarding alias in Namecheap → Email Forwarding
   location: 'Philippines', // ← change if needed
   // SEO: shown in Google results (keep description ~150 chars).
-  seoTitle: 'Geoff Sandoval — Software Developer & Aspiring Penetration Tester',
+  seoTitle: 'Geoff Sandoval | Software Developer & Aspiring Penetration Tester',
   seoDescription:
-    'Geoff Sandoval is a software developer and aspiring penetration tester from the Philippines building secure web and mobile apps with Next.js, Flutter and FastAPI.',
+    'Geoff Sandoval is a software developer and aspiring penetration tester in the Philippines, building secure web and mobile apps with Next.js and Flutter.',
   // Google Search Console → "HTML tag" method: paste only the content="..." value here.
   googleVerification: '',
   github,
@@ -19,65 +19,41 @@ export const site = {
     GitHub: `https://github.com/${github}`,
   },
 
-  // Hero recruiter card. availability: '' hides the badge. resume: e.g. '/resume.pdf' (put the file in public/).
+  // availability: '' hides the badge. resume: e.g. '/resume.pdf' (put the file in public/).
   availability: 'Open to internships & junior roles',
   resume: '',
-  // Rendered as a bash script (hire.sh): v → "string", list → (array), note → # comment.
-  highlights: [
-    { k: 'SHIPPED', v: 'tugon.live', note: 'live emergency-response app', href: 'https://www.tugon.live' },
-    { k: 'STACK', list: ['next.js', 'flutter', 'fastapi', 'postgresql'] },
-    { k: 'SECURES', list: ['bcrypt', 'jwt', 'rbac', 'rate-limits', 'owasp'] },
-  ],
-  // Hero terminal (typed out on load).
-  terminal: [
-    { cmd: 'whoami', out: ['geoff — software developer // aspiring pentester'] },
-    { cmd: 'cat stack.txt', out: ['flutter  next.js  fastapi  flask  postgresql'] },
-    { cmd: 'nmap -sV --top-ports 2 gpscrypt.me', out: ['80/tcp   open  http    → 301 https', '443/tcp  open  https   TLS ✓'] },
-    { cmd: './ship --prod tugon.live', out: ['✓ deployed · 216 endpoints · 186 tests passing'] },
-  ],
-
-  // Drop Seedance clips into public/ and set them here (e.g. '/hero.mp4'); empty = still image.
-  videos: { hero: '', builder: '', lab: '' },
 
   // Counted from the featured repos (Oct 2026).
   stats: [
     { value: 670, suffix: '+', label: 'Commits on featured projects' },
     { value: 480, suffix: '', label: 'API endpoints across projects' },
     { value: 186, suffix: '', label: 'Automated API tests (Tugon)' },
-    { value: 100, suffix: '%', label: 'Curiosity' },
   ],
 
   mission:
-    'I build software that feels effortless — then I try to break it. The best developers think like attackers.',
+    'I build software that feels effortless, then I try to break it. The best developers think like attackers.',
 
   pillars: [
-    { title: 'Build', text: 'Full-stack web and mobile apps with React, Next.js, Flutter and Python APIs — fast and built to last.' },
+    { title: 'Build', text: 'Full-stack web and mobile apps with React, Next.js, Flutter and Python APIs, fast and built to last.' },
     { title: 'Break', text: 'Ethical hacking in labs and CTFs: recon, exploitation, privilege escalation. Learning how systems fail.' },
-    { title: 'Secure', text: 'Hashed credentials, rate limits, role guards and least privilege — security designed in, not bolted on.' },
+    { title: 'Secure', text: 'Hashed credentials, rate limits, role guards and least privilege: security designed in, not bolted on.' },
   ],
 
   story: [
-    { title: 'The Student', text: 'BS Information Technology. Weekly system-administration labs taught me how real systems run — and how they break.' },
+    { title: 'The Student', text: 'BS Information Technology. Weekly system-administration labs taught me how real systems run and how they break.' },
     { title: 'The Builder', text: 'Late nights turning ideas into shipped software: an emergency-response platform, a scholarship system, an artisan marketplace.' },
     { title: 'The Breaker', text: 'Now training as a penetration tester. Every system I build, I want to know exactly how it could fall.' },
-  ],
-
-  services: [
-    { title: 'Web & Mobile Apps', text: 'Next.js, React and Flutter apps backed by FastAPI or Flask APIs.' },
-    { title: 'Immersive UI & 3D', text: 'Three.js scenes, motion and scroll storytelling.' },
-    { title: 'Security Reviews', text: 'Recon, vulnerability scanning and hardening checklists for small projects.' },
-    { title: 'Community', text: 'CTFs, write-ups and open source — learning in public.' },
   ],
 
   skills: ['TypeScript', 'JavaScript', 'React', 'Next.js', 'Flutter', 'Python', 'FastAPI', 'Flask', 'PostgreSQL', 'Redis', 'Supabase', 'Three.js', 'Git', 'System Administration'],
   security: ['Linux', 'Networking', 'Nmap', 'Burp Suite', 'OWASP Top 10', 'Wireshark', 'TryHackMe / HTB'],
 
-  // Featured case studies. image: put a screenshot in public/projects/ and set its path; '' shows the animated placeholder.
-  // metrics: a whole-number value counts up on scroll. links: '' hides the button (private repos would 404).
+  // Featured projects. image: put a screenshot in public/projects/ and set its path (16:10, e.g. 1280×800); '' shows no image.
+  // imageNote: optional caption on the image, e.g. for an anonymized client mockup.
+  // links: '' hides the button (private repos would 404).
   projects: [
     {
       title: 'Tugon',
-      bar: 'tugon.live',
       kind: 'Mobile App + Admin Dashboard · Emergency response',
       year: '2026',
       role: 'Full-stack developer · team of 2 · ~64% of commits',
@@ -119,13 +95,12 @@ export const site = {
     },
     {
       title: 'Applischo',
-      bar: 'applischo / evaluation',
       kind: 'Web App · Scholarship management',
-      year: '2026',
+      year: '2025',
       role: 'Full-stack developer · solo project',
       summary:
         'Scholarship management system for a municipal program, from application and exam to evaluation, approval and payout. A rule-based scorer recommends; staff decide.',
-      image: '',
+      image: '/projects/applischo.webp',
       metrics: [
         { value: '155', label: 'API endpoints' },
         { value: '34', label: 'Database tables' },
@@ -157,7 +132,6 @@ export const site = {
     },
     {
       title: 'Eterna',
-      bar: 'eterna / seller-dashboard',
       kind: 'E-commerce · 3rd-year project',
       year: '2025',
       role: 'Full-stack developer · solo build',
@@ -195,12 +169,11 @@ export const site = {
     },
     {
       title: 'System Administration Portfolio',
-      bar: 'bsit-sysadmin ~ ssh verified',
       kind: 'System Administration · ITEP 414',
       year: '2026',
       role: 'Coursework · solo',
       summary:
-        'A semester-long lab portfolio: planning the enterprise infrastructure of a 20-person startup, then deploying, networking and securing Ubuntu and Windows servers — every step documented.',
+        'A semester-long lab portfolio: planning the enterprise infrastructure of a 20-person startup, then deploying, networking and securing Ubuntu and Windows servers, with every step documented.',
       image: '',
       metrics: [
         { value: '20', label: 'Employees planned for' },
