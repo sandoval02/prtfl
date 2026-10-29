@@ -1,5 +1,6 @@
 import ThemeToggle from './ThemeToggle';
 import Reveal from './Reveal';
+import Carousel from './Carousel';
 import { site } from './site';
 import * as si from 'simple-icons';
 
@@ -81,6 +82,7 @@ const Media = ({ p, children }) =>
 function Project({ p }) {
   return (
     <article className="project card" data-reveal>
+      {p.slides && <div className="project-media"><Carousel slides={p.slides} title={p.title} /></div>}
       {p.image && (
         // With a live site, the screenshot links to it too
         <Media p={p}>

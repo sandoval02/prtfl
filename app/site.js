@@ -141,19 +141,27 @@ export const site = {
     },
     {
       title: 'Eterna',
-      kind: 'E-commerce · 3rd-year project',
+      kind: 'E-commerce · Web + mobile app · 3rd-year project',
       year: '2025',
       role: 'Full-stack developer · solo build',
       summary:
         'Marketplace for local artisans with separate buyer, seller, rider and admin portals. Includes checkout, a commission wallet, live chat and an AI shopping assistant.',
-      image: '',
+      // Carousel of screenshots (16:10). Shown instead of a single image.
+      slides: [
+        { src: '/projects/eterna/pub-home.webp', label: 'Home page' },
+        { src: '/projects/eterna/pub-shop.webp', label: 'Shop with filters' },
+        { src: '/projects/eterna/pub-detail.webp', label: 'Product details' },
+        { src: '/projects/eterna/mobile-shop.webp', label: 'Mobile app · shop and cart' },
+        { src: '/projects/eterna/buyer-orders.webp', label: 'Buyer · my orders' },
+      ],
       metrics: [
         { value: '109', label: 'API endpoints' },
         { value: '33', label: 'Pages' },
         { value: '4', label: 'User roles' },
       ],
-      stack: ['React 19', 'TypeScript', 'Redux Toolkit', 'Tailwind CSS 4', 'MUI', 'Flask', 'PostgreSQL', 'Socket.IO', 'Cloudinary', 'PayPal'],
+      stack: ['React 19', 'TypeScript', 'Redux Toolkit', 'Tailwind CSS 4', 'MUI', 'Flask', 'PostgreSQL', 'Socket.IO', 'Cloudinary', 'PayPal', 'Flutter', 'Dart', 'Riverpod', 'Docker'],
       features: [
+        'Flutter mobile app for buyers and riders, sharing the same API',
         'Buyers browse products, check out and track orders',
         'Seller portal for products, orders and analytics',
         'Rider portal for deliveries, with order QR codes from checkout',
