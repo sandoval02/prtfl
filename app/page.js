@@ -12,7 +12,7 @@ const jsonLd = {
       '@type': 'Person', ...person, name: site.name, url: site.url, image: `${site.url}/me.webp`,
       jobTitle: ['Software Developer', 'Aspiring Penetration Tester'], description: site.seoDescription,
       address: { '@type': 'PostalAddress', addressCountry: 'PH' },
-      knowsAbout: [...site.skills, ...site.security], sameAs: Object.values(site.socials),
+      knowsAbout: site.skillGroups.flatMap((g) => g.items), sameAs: Object.values(site.socials),
     },
     { '@type': 'WebSite', '@id': `${site.url}/#website`, url: site.url, name: site.name, inLanguage: 'en', publisher: person },
     { '@type': 'ProfilePage', url: site.url, name: site.seoTitle, mainEntity: person, about: person },
@@ -42,14 +42,17 @@ const BRAND = {
   leaflet: si.siLeaflet, render: si.siRender, tailwind: si.siTailwindcss, resend: si.siResend,
   mediapipe: si.siMediapipe, vercel: si.siVercel, mui: si.siMui, 'socket.io': si.siSocketdotio,
   cloudinary: si.siCloudinary, paypal: si.siPaypal, ubuntu: si.siUbuntu, linux: si.siLinux, git: si.siGit,
-  'three.js': si.siThreedotjs, 'draw.io': si.siDiagramsdotnet, burp: si.siBurpsuite, owasp: si.siOwasp,
+  'three.js': si.siThreedotjs, gsap: si.siGsap, vite: si.siVite, 'shadcn/ui': si.siShadcnui,
+  'better auth': si.siBetterauth, ollama: si.siOllama, 'google ml kit': si.siGoogle, 'google maps': si.siGooglemaps,
+  pytest: si.siPytest, docker: si.siDocker, 'openai api': '10A37F', 'draw.io': si.siDiagramsdotnet, burp: si.siBurpsuite, owasp: si.siOwasp,
   wireshark: si.siWireshark, tryhackme: si.siTryhackme,
   windows: '0078D4', microsoft: '0078D4', openssh: '6B7280', nmap: '4682B4',
 };
-// Near-black brands (Next.js, Vercel…) use the text colour so they stay visible in dark mode.
+// Near-black or near-white brands (Next.js, Better Auth…) use the text colour so they stay visible in both themes.
 const colour = (hex) => {
   const [r, g, b] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
-  return 0.299 * r + 0.587 * g + 0.114 * b < 60 ? 'var(--fg)' : `#${hex}`;
+  const l = 0.299 * r + 0.587 * g + 0.114 * b;
+  return l < 60 || l > 235 ? 'var(--fg)' : `#${hex}`;
 };
 
 const Tags = ({ items, ...p }) => (
@@ -68,14 +71,22 @@ const Tags = ({ items, ...p }) => (
   </ul>
 );
 
+const Media = ({ p, children }) =>
+  p.links.live ? (
+    <a href={p.links.live} className="project-media" aria-label={`Open ${p.title} live site`} {...ext}>{children}</a>
+  ) : (
+    <div className="project-media">{children}</div>
+  );
+
 function Project({ p }) {
   return (
     <article className="project card" data-reveal>
       {p.image && (
-        <div className="project-media">
+        // With a live site, the screenshot links to it too
+        <Media p={p}>
           <img src={p.image} alt={`${p.title} ${p.imageNote ? 'preview' : 'screenshot'}`} loading="lazy" width="1280" height="800" />
           {p.imageNote && <span className="image-note">{p.imageNote}</span>}
-        </div>
+        </Media>
       )}
 
       <div className="project-body">
@@ -206,14 +217,12 @@ export default function Home() {
         <section id="skills" className="container section">
           <h2 data-reveal>Skills</h2>
           <div className="skills" data-reveal>
-            <div>
-              <h3>Development</h3>
-              <Tags items={site.skills} />
-            </div>
-            <div>
-              <h3>Security</h3>
-              <Tags items={site.security} />
-            </div>
+            {site.skillGroups.map((g) => (
+              <div key={g.name} className="card">
+                <h3>{g.name}</h3>
+                <Tags items={g.items} />
+              </div>
+            ))}
           </div>
         </section>
 

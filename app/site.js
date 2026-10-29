@@ -27,7 +27,7 @@ export const site = {
   stats: [
     { value: 670, suffix: '+', label: 'Commits on featured projects' },
     { value: 480, suffix: '', label: 'API endpoints across projects' },
-    { value: 186, suffix: '', label: 'Automated API tests (Tugon)' },
+    { value: 4, suffix: '', label: 'Full-stack projects built' },
   ],
 
   mission:
@@ -45,8 +45,17 @@ export const site = {
     { title: 'The Breaker', text: 'Now training as a penetration tester. Every system I build, I want to know exactly how it could fall.' },
   ],
 
-  skills: ['TypeScript', 'JavaScript', 'React', 'Next.js', 'Flutter', 'Python', 'FastAPI', 'Flask', 'PostgreSQL', 'Redis', 'Supabase', 'Three.js', 'Git', 'System Administration'],
-  security: ['Linux', 'Networking', 'Nmap', 'Burp Suite', 'OWASP Top 10', 'Wireshark', 'TryHackMe / HTB'],
+  // Skills section, one card per category. Taken from the featured projects' real dependencies.
+  skillGroups: [
+    { name: 'Languages', items: ['TypeScript', 'JavaScript', 'Python', 'Dart', 'SQL'] },
+    { name: 'Frontend', items: ['React', 'Next.js', 'Tailwind CSS', 'shadcn/ui', 'Three.js', 'GSAP', 'Redux Toolkit', 'MUI', 'Vite'] },
+    { name: 'Mobile', items: ['Flutter', 'Firebase Cloud Messaging', 'Google ML Kit', 'Google Maps'] },
+    { name: 'Backend', items: ['FastAPI', 'Flask', 'REST APIs', 'WebSockets', 'Socket.IO', 'Better Auth'] },
+    { name: 'Databases', items: ['PostgreSQL', 'Supabase', 'Redis', 'Prisma', 'SQLAlchemy'] },
+    { name: 'AI', items: ['Gemini API', 'OpenAI API', 'Ollama'] },
+    { name: 'Tools & DevOps', items: ['Git', 'Docker', 'pytest', 'Render', 'Vercel', 'Linux', 'System Administration'] },
+    { name: 'Security', items: ['Networking', 'Nmap', 'Burp Suite', 'OWASP Top 10', 'Wireshark', 'TryHackMe / HTB'] },
+  ],
 
   // Featured projects. image: put a screenshot in public/projects/ and set its path (16:10, e.g. 1280×800); '' shows no image.
   // imageNote: optional caption on the image, e.g. for an anonymized client mockup.
@@ -56,7 +65,7 @@ export const site = {
       title: 'Tugon',
       kind: 'Mobile App + Admin Dashboard · Emergency response',
       year: '2026',
-      role: 'Full-stack developer · team of 2 · ~64% of commits',
+      role: 'Full-stack developer · team of 2 · ~66% of commits',
       summary:
         'Emergency-response platform for the municipality of Liliw. Citizens report incidents from the mobile app; staff dispatch and track responders live from a web command center, and AI helps triage reports.',
       image: '/projects/tugon.webp',
@@ -66,7 +75,7 @@ export const site = {
         { value: '70', label: 'Admin pages' },
         { value: '10', label: 'User roles' },
       ],
-      stack: ['Flutter', 'Dart', 'FastAPI', 'Python', 'Next.js', 'TypeScript', 'PostgreSQL (Supabase)', 'Prisma', 'SQLAlchemy', 'Redis', 'Firebase Cloud Messaging', 'Gemini API', 'Leaflet / Google Maps', 'Render'],
+      stack: ['Flutter', 'Dart', 'FastAPI', 'Python', 'Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'shadcn/ui', 'Three.js (React Three Fiber)', 'GSAP', 'Vite', 'PostgreSQL (Supabase)', 'Prisma', 'SQLAlchemy', 'Redis', 'Better Auth', 'Firebase Cloud Messaging', 'Google ML Kit', 'Gemini API', 'OpenAI API', 'Ollama', 'Leaflet / Google Maps', 'Recharts', 'Cloudinary', 'pytest', 'Render'],
       features: [
         'Citizens report incidents with photos and voice input',
         'Web command center: dispatch, live tracking, incidents and evacuation',
@@ -99,7 +108,7 @@ export const site = {
       year: '2025',
       role: 'Full-stack developer · solo project',
       summary:
-        'Scholarship management system for a municipal program, from application and exam to evaluation, approval and payout. A rule-based scorer recommends; staff decide.',
+        'A scholarship management system I designed and built end to end: applications, online exams, evaluation, approval and payouts in one place. A rule-based scorer explains every recommendation, and staff make the final decision.',
       image: '/projects/applischo.webp',
       metrics: [
         { value: '155', label: 'API endpoints' },
